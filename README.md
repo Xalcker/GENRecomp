@@ -125,6 +125,7 @@ GBRecomp: `--frames N`, `--input archivo` (el guion de `--record`: `cuadro BOTON
 `src/platform/inputs.h`), `--seed S` (suma un mando aleatorio reproducible, el mismo de las otras dos
 consolas) y, en `genbench`, `--repeat N`. También valen el número de cuadros suelto y
 `boton:desde-hasta` (`a b c x y z start mode up down left right`). `sh tests/contract.sh` lo comprueba.
+**Ciclo completo.** `sh tests/recomp_game.sh ROM NOMBRE [CUADROS] [SEMILLAS...]` es el mismo script en NESRecomp, GBRecomp y GENRecomp (la consola sale del recompilador que hay en la carpeta, y `retrorecomp/tests/contract.py` comprueba que sigan idénticos): graba antes una traza guionada con `tests/inputs/ciclo_traza.txt` y corre cada `difftest` con `tests/inputs/ciclo_difftest.txt` más cada semilla; `TRACE_FRAMES=N` y `NOTRACE=1` valen en los tres.
 
 ## Estructura
 
@@ -136,7 +137,7 @@ consolas) y, en `genbench`, `--repeat N`. También valen el número de cuadros s
 | `src/tools/` | `gentrace`, `genshot`, `genaudio`, `genramdump`, `genrun`, las pruebas y `embed` (`genbench` está en `src/platform/bench.c`). |
 | `tools/` | `oracles/` (Genesis Plus GX y BlastEm como referencia), `compat/` (prueba de compatibilidad), `retrorecomp/`: la GUI común con NESRecomp y GBRecomp (submódulo). |
 | `docs/` | `PLAN.md`, `ARQUITECTURA.md`, `COMPATIBILIDAD.md` y `compat/` (el informe con miniaturas). |
-| `tests/` | `run_tests.sh` (`make test`), `recomp_game.sh` (ciclo completo de un juego: `ROM NOMBRE [CUADROS] [SEMILLAS...]`, como en NESRecomp y GBRecomp), `sst68k.sh`, `golden.sh`, `coverage.sh`, `contract.sh` (el mismo archivo en los tres repos). |
+| `tests/` | `run_tests.sh` (`make test`), `recomp_game.sh` (ciclo completo de un juego: `ROM NOMBRE [CUADROS] [SEMILLAS...]`, como en NESRecomp y GBRecomp), `sst68k.sh`, `golden.sh`, `coverage.sh`, `contract.sh` (el mismo archivo en los tres repos). | 
 | `testroms/` | Pruebas libres (`make testroms`): las SingleStepTests del 68000 y del Z80 y las demos Overdrive 1 y 2 de Titan (scene.org); a mano, el 240p Test Suite en `testroms/240p/`. No se versionan. |
 | `roms/` | Tus juegos. No se versionan. |
 
