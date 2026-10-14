@@ -191,21 +191,32 @@ $(BUILD):
 test: all
 	sh tests/run_tests.sh
 
-# El juego recompilado en el navegador (retrorecomp#44): el proyecto de la demo del contrato con make web
-# (Emscripten, o Docker con la imagen fija de platform/web.mk). El CI lo corre en Linux
-webtest: genrecomp$(EXE)
-	rm -rf $(BUILD)/proy_web
-	./genrecomp$(EXE) testroms/demos/overdrive.bin -o $(BUILD)/proy_web --name prueba >/dev/null
-	$(MAKE) -C $(BUILD)/proy_web web
-	test -s $(BUILD)/proy_web/web/prueba.wasm && test -s $(BUILD)/proy_web/web/prueba.html && echo "ok    make web (overdrive)"
+# webtest y apktest usan por omisión la ROM mínima de las pruebas (tests/minima.sh): comprueban que la web y la APK se
+# arman (con todo el runtime, la plataforma y SDL2) sin compilar el código generado grande de overdrive.bin, que con el
+# clang del NDK tarda ~5,5 min por ABI y con emcc ~45 s; ese código ya lo compila y lo compara make test con el cc
+# nativo. Con código generado grande (p. ej. después de tocar las banderas de shared/android/CMakeLists.txt, como el
+# -g0 que evita que clang se quede sin memoria): make apktest APKTEST_ROM=testroms/demos/overdrive.bin
+MINIMA      := $(BUILD)/tests/minima.bin
+WEBTEST_ROM ?= $(MINIMA)
+APKTEST_ROM ?= $(MINIMA)
+$(MINIMA): tests/minima.sh
+	sh tests/minima.sh $@
 
-# El juego recompilado en Android (retrorecomp#45): el proyecto de la demo con make apk (el SDK de Android, o Docker
-# con la imagen de platform/android/Dockerfile). El CI lo corre en Linux, con el SDK que traen los runners
-apktest: genrecomp$(EXE)
+# El juego recompilado en el navegador (retrorecomp#44): el proyecto de WEBTEST_ROM con make web (Emscripten, o
+# Docker con la imagen fija de platform/web.mk). El CI lo corre en Linux
+webtest: genrecomp$(EXE) $(WEBTEST_ROM)
+	rm -rf $(BUILD)/proy_web
+	./genrecomp$(EXE) $(WEBTEST_ROM) -o $(BUILD)/proy_web --name prueba >/dev/null
+	$(MAKE) -C $(BUILD)/proy_web web
+	test -s $(BUILD)/proy_web/web/prueba.wasm && test -s $(BUILD)/proy_web/web/prueba.html && echo "ok    make web ($(notdir $(WEBTEST_ROM)))"
+
+# El juego recompilado en Android (retrorecomp#45): el proyecto de APKTEST_ROM con make apk (el SDK de Android, o
+# Docker con la imagen de platform/android/Dockerfile). El CI lo corre en Linux, con el SDK que traen los runners
+apktest: genrecomp$(EXE) $(APKTEST_ROM)
 	rm -rf $(BUILD)/proy_apk
-	./genrecomp$(EXE) testroms/demos/overdrive.bin -o $(BUILD)/proy_apk --name prueba >/dev/null
+	./genrecomp$(EXE) $(APKTEST_ROM) -o $(BUILD)/proy_apk --name prueba >/dev/null
 	$(MAKE) -C $(BUILD)/proy_apk apk $(if $(APK_ABIS),APK_ABIS="$(APK_ABIS)")
-	unzip -l $(BUILD)/proy_apk/apk/prueba-debug.apk | grep -q 'lib/.*/libmain.so' && echo "ok    make apk (overdrive)"
+	unzip -l $(BUILD)/proy_apk/apk/prueba-debug.apk | grep -q 'lib/.*/libmain.so' && echo "ok    make apk ($(notdir $(APKTEST_ROM)))"
 
 # Pruebas libres en testroms/ (no se versionan), en versiones fijas: las SingleStepTests del
 # 68000 y las demos Overdrive de Titan (ver tests/testroms.sh)
