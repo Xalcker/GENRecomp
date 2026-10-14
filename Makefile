@@ -57,7 +57,7 @@ $(WINRES): src/platform/icono.rc src/platform/icono.ico | $(BUILD)
 endif
 
 gen$(EXE): $(call plat,$(GEN_SRC)) $(wildcard src/platform/*.h) $(RT) $(WINRES)
-	$(CC) $(CFLAGS) $(SDL_CFLAGS) -Isrc/runtime -I$(SHARED) -Isrc/platform -o $@ $(call plat,$(GEN_SRC)) $(RT) $(WINRES) $(SDL_LIBS) -lm
+	$(CC) $(CFLAGS) -I$(SHARED) $(SDL_CFLAGS) -Isrc/runtime -Isrc/platform -o $@ $(call plat,$(GEN_SRC)) $(RT) $(WINRES) $(SDL_LIBS) -lm
 
 PROGS := genrecomp gentrace genshot genaudio genbench genramdump genrun gen \
          carttest m68ktest z80test bustest vdptest audiotest statetest inputtest
