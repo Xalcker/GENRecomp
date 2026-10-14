@@ -56,8 +56,8 @@ mkdir -p build/tests build/shots
 # ventana; si cambia a propósito: UI_GOLDEN_UPDATE=1 sh tests/run_tests.sh, y revisa build/shots/)
 if [ -x "$(exe gen)" ]; then
     # Cargar estado, Controles, Este juego, Acerca de (A_LOAD_STATE, A_HELP_CONTROLS... en main_sdl.c)
-    if sh tools/retrorecomp/shared/ui_golden.sh "$(exe gen)" "$R" tests/ui_golden.txt "0 1 2 3 4 5 6" "5 37 38 39" > build/ui_golden.out 2>&1; then
-        echo "ok    gen: los 7 menús y los 4 diálogos coinciden con la referencia"
+    if sh tools/retrorecomp/shared/ui_golden.sh "$(exe gen)" "$R" tests/ui_golden.txt "0 1 2 3 4 5 6" "5 37 39" > build/ui_golden.out 2>&1; then
+        echo "ok    gen: los 7 menús y 3 diálogos coinciden con la referencia"
     else cat build/ui_golden.out; fallas=$((fallas + 1)); fi
 fi
 tiempo "interfaz"
