@@ -47,6 +47,7 @@ static float output(const Gen *g)
 void psg_run(Gen *g, u64 mclk)
 {
     Psg *p = &g->psg;
+    PROF_ENTER(PROF_SONIDO);
     while (p->mclk + MCLK_PER_TICK <= mclk) {
         float s = output(g);
         audio_add(g, p->mclk, p->mclk + MCLK_PER_TICK, s, s);
@@ -66,6 +67,7 @@ void psg_run(Gen *g, u64 mclk)
             }
         }
     }
+    PROF_LEAVE();
 }
 
 void psg_write(Gen *g, u8 v, u64 mclk)
