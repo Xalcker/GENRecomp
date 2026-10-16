@@ -1,3 +1,5 @@
+> **Este repositorio está archivado.** GENRecomp sigue en [Xalcker/retrorecomp](https://github.com/Xalcker/retrorecomp), en la carpeta [`gen/`](https://github.com/Xalcker/retrorecomp/tree/main/gen), con toda su historia. Las issues abiertas se transfirieron allí (etiqueta `sys:gen`), y la versión v0.1.0 es la etiqueta `gen-v0.1.0`.
+
 
 Hay que clonar con el submódulo de retrorecomp, que trae el código que comparten los cuatro recompiladores (`random_pad.h`, `trace_line.h`): `git clone --recursive`, o `git submodule update --init` en un clon ya hecho. El ZIP de GitHub no lo incluye.
 # GENRecomp
